@@ -1,29 +1,35 @@
 {
-  "name": "game-asteroid",
-  "version": "1.0.0",
-  "description": "Asteroid game, just for fun",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ddalairac/game-asteroid.git"
-  },
-  "keywords": [
-    "game",
-    "asteroid",
-    "typescript",
-    "javascript"
-  ],
-  "author": "Dalairac Diego",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ddalairac/game-asteroid/issues"
-  },
-  "homepage": "https://github.com/ddalairac/game-asteroid#readme",
-  "dependencies": {
-    "scss": "^0.2.4",
-    "typescript": "^4.2.3"
-  }
+    "name": "game-asteroid",
+    "version": "1.0.0",
+    "description": "Asteroid game, just for fun",
+    "main": "main.js",
+    "scripts": {
+        "watch": "npm run css && npm run tsc -- -w ",
+        "build": "npm run tsc && npm run css ",
+        "tsc": "tsc",
+        "tsc:w": "tsc -w",
+        "css": "sass  scss:css",
+        "css:w": "sass --watch scss:css",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ddalairac/game-asteroid.git"
+    },
+    "keywords": [
+        "game",
+        "asteroid",
+        "typescript",
+        "javascript"
+    ],
+    "author": "Dalairac Diego",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ddalairac/game-asteroid/issues"
+    },
+    "homepage": "https://github.com/ddalairac/game-asteroid#readme",
+    "dependencies": {
+        "scss": "^0.2.4",
+        "typescript": "^4.2.3"
+    }
 }
