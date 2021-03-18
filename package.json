@@ -9,8 +9,7 @@
         "tsc": "tsc",
         "tsc:w": "tsc -w",
         "css": "sass  scss:css",
-        "css:w": "sass --watch scss:css",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "css:w": "sass --watch scss:css"
     },
     "repository": {
         "type": "git",
