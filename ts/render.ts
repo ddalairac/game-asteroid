@@ -29,13 +29,13 @@ export class Render {
         return this.ctx.canvas.height
     }
 
-    drawPolygon(centerX: number, centerY: number, rotationDegrees: number = 45, sideCount: number = 3, size: number = 20,
+    drawPolygon(centerX: number, centerY: number, radian: number, sideCount: number = 3, size: number = 20,
         strokeWidth: number = 4, strokeColor: string = 'purple', fillColor: string = 'skyblue') {
 
-        let radians = rotationDegrees * Math.PI / 180;
+        // let radian = angle * Math.PI / 180;
 
         this.ctx.translate(centerX, centerY);
-        this.ctx.rotate(radians);
+        this.ctx.rotate(radian);
         this.ctx.beginPath();
         this.ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
         for (var i = 1; i <= sideCount; i += 1) {
@@ -48,20 +48,44 @@ export class Render {
         this.ctx.lineWidth = strokeWidth;
         this.ctx.stroke();
         this.ctx.fill();
-        this.ctx.rotate(-radians);
+        this.ctx.rotate(-radian);
         this.ctx.translate(-centerX, -centerY);
     }
 
-   
+
     private drawShip() {
         let ship = Game.instance.ship
-        this.drawPolygon(ship.x, ship.y, ship.angle)
+        this.drawPolygon(ship.x, ship.y, ship.radian)
     }
-    private drawAsteroid() {
-        this.drawPolygon(200, 200, 0, 8, 50)
+    private drawAsteroids() {
+        Game.instance.asteroids.forEach(asteroid => {
+            this.drawAsteroid(asteroid.x, asteroid.y, asteroid.size)
+        });
+    }
+    private drawAsteroid(centerX: number, centerY: number, size: number) {
+        let sideCount: number = 8
+        let strokeWidth: number = 4
+        let strokeColor: string = 'purple'
+        let fillColor: string = 'skyblue'
+
+        this.ctx.translate(centerX, centerY);
+        this.ctx.beginPath();
+        this.ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
+        for (var i = 1; i <= sideCount; i += 1) {
+            this.ctx.lineTo(size * Math.cos(i * 2 * Math.PI / sideCount), size * Math.sin(i * 2 * Math.PI / sideCount));
+        }
+        this.ctx.fillStyle = fillColor;
+        this.ctx.strokeStyle = strokeColor;
+        this.ctx.lineWidth = strokeWidth;
+        this.ctx.stroke();
+        this.ctx.fill();
+        this.ctx.closePath();
+        this.ctx.translate(-centerX, -centerY);
     }
     private drawBullet() {
-        this.drawPolygon(500, 500, 0, 2, 5)
+        Game.instance.bullets.forEach(bullet => {
+            this.drawPolygon(bullet.x, bullet.y, bullet.radian, 2, 5)
+        });
     }
 
     public drawBoard() {
@@ -69,8 +93,8 @@ export class Render {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Dibujar canvas
+        this.drawBullet()
         this.drawShip()
-        this.drawAsteroid()
-        this.drawBullet() 
+        this.drawAsteroids()
     }
 }

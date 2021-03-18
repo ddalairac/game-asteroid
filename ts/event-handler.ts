@@ -49,7 +49,8 @@ export class EventHandler {
     }
 
     private static shootEvent() {
-        console.log("Shot event")
+        // console.log("Shot event")
+        Game.instance.ship.shut()
     }
     private static pauseEvent() {
         console.log("Pause event")

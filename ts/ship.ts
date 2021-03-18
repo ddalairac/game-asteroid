@@ -1,3 +1,5 @@
+import { Bullet } from './bullet.js'
+import { Game } from './game.js'
 import { Render } from './render.js'
 
 export class Ship {
@@ -5,22 +7,40 @@ export class Ship {
         this._x = Render.instance.stageLimitX / 2
         this._y = Render.instance.stageLimitY / 2
     }
+    public keyLeftPress: boolean = false
+    public keyRightPress: boolean = false
+    public keyUpPress: boolean = false
+    public keyDownPress: boolean = false
     private _x: number
     private _y: number
     private _speedX: number = 0
     private _speedY: number = 0
     private _angle: number = 0
+    private _maxSpeed: number = 30
 
-    private maxSpeed: number = 30
-    public keyLeftPress: boolean = false
-    public keyRightPress: boolean = false
-    public keyUpPress: boolean = false
-    public keyDownPress: boolean = false
-
-    public get angle(): number {
+    shut(){
+        Game.instance.bullets.push(new Bullet(this.x,this.y,this._angle))
+    }
+    move() {
+        if (this.keyLeftPress) {
+            this.angle -= 6
+        }
+        if (this.keyRightPress) {
+            this.angle += 6
+        }
+        if (this.keyUpPress) {
+            this.speedX += Math.cos(this.radian)
+            this.speedY += Math.sin(this.radian)
+        }
+        if (this.keyDownPress) {
+            this.speedX -= Math.cos(this.radian)
+            this.speedY -= Math.sin(this.radian)
+        }
+    }
+    get angle(): number {
         return this._angle
     }
-    public set angle(value: number) {
+    set angle(value: number) {
         this._angle = value
         if (this._angle > 360) {
             this._angle -= 360
@@ -28,9 +48,7 @@ export class Ship {
         if (this._angle < 0) {
             this._angle += 360
         }
-        // console.log("angle",this.angle)
     }
-
     get x(): number {
         this._x += this._speedX
         if (this._x > Render.instance.stageLimitX) {
@@ -51,55 +69,31 @@ export class Ship {
         }
         return this._y
     }
-    set speedX(value: number) {
-
+    private set speedX(value: number) {
         this._speedX = value
-        if (this._speedX > this.maxSpeed) {
-            this._speedX = this.maxSpeed
+        if (this._speedX > this._maxSpeed) {
+            this._speedX = this._maxSpeed
         }
-        if (this._speedX < -this.maxSpeed) {
-            this._speedX = -this.maxSpeed
+        if (this._speedX < -this._maxSpeed) {
+            this._speedX = -this._maxSpeed
         }
-        // console.log("this._speedX", this._speedX, value)
     }
-    set speedY(value: number) {
+    private set speedY(value: number) {
         this._speedY = value
-        if (this._speedY > this.maxSpeed) {
-            this._speedY = this.maxSpeed
+        if (this._speedY > this._maxSpeed) {
+            this._speedY = this._maxSpeed
         }
-        if (this._speedY < -this.maxSpeed) {
-            this._speedY = -this.maxSpeed
+        if (this._speedY < -this._maxSpeed) {
+            this._speedY = -this._maxSpeed
         }
-
     }
-    get speedX(): number {
+    private get speedX(): number {
         return this._speedX
     }
-    get speedY(): number {
+    private get speedY(): number {
         return this._speedY
     }
     get radian():number{
         return this.angle * Math.PI / 180;
-    }
-    public move() {
-        if (this.keyLeftPress) {
-            this.angle -= 6
-        }
-        if (this.keyRightPress) {
-            this.angle += 6
-        }
-        if (this.keyUpPress) {
-            
-            this.speedX += Math.cos(this.radian)
-            this.speedY += Math.sin(this.radian)
-            // console.log("speed", { speedX: this.speedX, speedY: this.speedY, cos: Math.cos(this.radian), sin: Math.sin(this.radian) })
-        }
-        if (this.keyDownPress) {
-            let radians = this.angle * Math.PI / 180;
-            this.speedX -= Math.cos(this.radian)
-            this.speedY -= Math.sin(this.radian)
-            // console.log("speed", { speedX: this.speedX, speedY: this.speedY, cos: Math.cos(radians), sin: Math.sin(radians) })
-        }
-
     }
 }
