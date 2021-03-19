@@ -4,12 +4,13 @@
     "description": "Asteroid game, just for fun",
     "main": "main.js",
     "scripts": {
-        "watch": "npm run css && npm run tsc -- -w ",
-        "build": "npm run tsc && npm run css ",
+        "clean": "rm -rf css/*.* && rm -rf js/*.*",
         "tsc": "tsc",
-        "tsc:w": "tsc -w",
-        "css": "sass  scss:css",
-        "css:w": "sass --watch scss:css"
+        "scss": "sass  scss:css",
+        "watch:scss": "npm run scss -- --watch",
+        "watch:tsc": "npm run tsc -- --watch",
+        "watch": "npm-run-all --parallel watch:*",
+        "build": "npm run clean && npm run tsc && npm run css "
     },
     "repository": {
         "type": "git",
@@ -28,6 +29,7 @@
     },
     "homepage": "https://github.com/ddalairac/game-asteroid#readme",
     "dependencies": {
+        "npm-run-all": "^4.1.5",
         "scss": "^0.2.4",
         "typescript": "^4.2.3"
     }

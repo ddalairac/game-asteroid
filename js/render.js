@@ -19,9 +19,7 @@ export class Render {
     get stageLimitY() {
         return this.ctx.canvas.height;
     }
-    drawPolygon(centerX, centerY, radian, sideCount = 3, size = 20, strokeWidth = 4, strokeColor = 'purple', fillColor = 'skyblue') {
-        this.ctx.translate(centerX, centerY);
-        this.ctx.rotate(radian);
+    drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor) {
         this.ctx.beginPath();
         this.ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
         for (var i = 1; i <= sideCount; i += 1) {
@@ -33,40 +31,58 @@ export class Render {
         this.ctx.lineWidth = strokeWidth;
         this.ctx.stroke();
         this.ctx.fill();
+    }
+    drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth, strokeColor, fillColor) {
+        this.ctx.translate(centerX, centerY);
+        this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
+        this.ctx.translate(-centerX, -centerY);
+    }
+    drawPolygon_MoveAndRotate(radian, centerX, centerY, sideCount, size, strokeWidth, strokeColor, fillColor) {
+        this.ctx.translate(centerX, centerY);
+        this.ctx.rotate(radian);
+        this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
         this.ctx.rotate(-radian);
         this.ctx.translate(-centerX, -centerY);
     }
     drawShip() {
         let ship = Game.instance.ship;
-        this.drawPolygon(ship.x, ship.y, ship.radian);
+        let centerX = ship.x;
+        let centerY = ship.y;
+        let radian = ship.radian;
+        let size = 20;
+        let sideCount = 3;
+        let strokeWidth = 4;
+        let strokeColor = 'silver';
+        let fillColor = 'whitesmoke';
+        let fillColorWindow = 'cadetblue';
+        this.ctx.translate(centerX, centerY);
+        this.ctx.rotate(radian);
+        this.drawPolygon(5, 16, strokeWidth, strokeColor, fillColor);
+        this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
+        this.drawPolygon(2, 16, 2, strokeColor, fillColor);
+        this.ctx.rotate(-radian);
+        this.ctx.translate(-centerX, -centerY);
     }
-    drawAsteroids() {
-        Game.instance.asteroids.forEach(asteroid => {
-            this.drawAsteroid(asteroid.x, asteroid.y, asteroid.size);
+    drawBullet() {
+        let size = 5;
+        let sideCount = 2;
+        let strokeWidth = 4;
+        let strokeColor = 'red';
+        let fillColor = 'red';
+        Game.instance.bullets.forEach(bullet => {
+            this.drawPolygon_MoveAndRotate(bullet.radian, bullet.x, bullet.y, sideCount, size, strokeWidth, strokeColor, fillColor);
         });
     }
     drawAsteroid(centerX, centerY, size) {
         let sideCount = 8;
         let strokeWidth = 4;
-        let strokeColor = 'purple';
-        let fillColor = 'skyblue';
-        this.ctx.translate(centerX, centerY);
-        this.ctx.beginPath();
-        this.ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
-        for (var i = 1; i <= sideCount; i += 1) {
-            this.ctx.lineTo(size * Math.cos(i * 2 * Math.PI / sideCount), size * Math.sin(i * 2 * Math.PI / sideCount));
-        }
-        this.ctx.fillStyle = fillColor;
-        this.ctx.strokeStyle = strokeColor;
-        this.ctx.lineWidth = strokeWidth;
-        this.ctx.stroke();
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.translate(-centerX, -centerY);
+        let strokeColor = 'darkred';
+        let fillColor = 'brown';
+        this.drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth, strokeColor, fillColor);
     }
-    drawBullet() {
-        Game.instance.bullets.forEach(bullet => {
-            this.drawPolygon(bullet.x, bullet.y, bullet.radian, 2, 5);
+    drawAsteroids() {
+        Game.instance.asteroids.forEach(asteroid => {
+            this.drawAsteroid(asteroid.x, asteroid.y, asteroid.size);
         });
     }
     drawBoard() {
