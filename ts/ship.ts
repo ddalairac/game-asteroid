@@ -7,6 +7,7 @@ export class Ship {
         this._x = Render.instance.stageLimitX / 2
         this._y = Render.instance.stageLimitY / 2
     }
+    public size: number = 20
     public keyLeftPress: boolean = false
     public keyRightPress: boolean = false
     public keyUpPress: boolean = false
@@ -16,27 +17,50 @@ export class Ship {
     private _speedX: number = 0
     private _speedY: number = 0
     private _angle: number = 0
-    private _maxSpeed: number = 30
+    private _maxSpeed: number = 15
 
-    shut(){
-        Game.instance.bullets.push(new Bullet(this.x,this.y,this._angle))
+    shut() {
+        Game.instance.bullets.push(new Bullet(this.x, this.y, this._angle))
     }
-    move() {
+    update() {
         if (this.keyLeftPress) {
-            this.angle -= 6
+            this.angle -= 15
         }
         if (this.keyRightPress) {
-            this.angle += 6
+            this.angle += 15
         }
         if (this.keyUpPress) {
-            this.speedX += Math.cos(this.radian)
-            this.speedY += Math.sin(this.radian)
+            this.speedX += Math.cos(this.radian) / 2
+            this.speedY += Math.sin(this.radian) / 2
         }
         if (this.keyDownPress) {
-            this.speedX -= Math.cos(this.radian)
-            this.speedY -= Math.sin(this.radian)
+            this.speedX -= Math.cos(this.radian) / 2
+            this.speedY -= Math.sin(this.radian) / 2
+        }
+        // X
+        this._x += this._speedX
+        if (this._x > Render.instance.stageLimitX) {
+            this._x = 0
+        }
+        if (this._x < 0) {
+            this._x = Render.instance.stageLimitX
+        }
+        // Y
+        this._y += this._speedY
+        if (this._y > Render.instance.stageLimitY) {
+            this._y = 0
+        }
+        if (this._y < 0) {
+            this._y = Render.instance.stageLimitY
         }
     }
+    // collide(objX:number,objY:number):boolean{
+    //     let shipLeft = Math.round(this.x - this.size / 2)
+    //     let shipRight = Math.round(this.x + this.size / 2)
+    //     let shipTop = Math.round(this.y - this.size / 2)
+    //     let shipBottom = Math.round(this.y + this.size / 2)
+    //     return ((shipLeft < objX && objY > shipLeft ) || (shipRight < objY && objX > shipRight )) 
+    // }
     get angle(): number {
         return this._angle
     }
@@ -50,24 +74,13 @@ export class Ship {
         }
     }
     get x(): number {
-        this._x += this._speedX
-        if (this._x > Render.instance.stageLimitX) {
-            this._x = 0
-        }
-        if (this._x < 0) {
-            this._x = Render.instance.stageLimitX
-        }
         return this._x
     }
     get y(): number {
-        this._y += this._speedY
-        if (this._y > Render.instance.stageLimitY) {
-            this._y = 0
-        }
-        if (this._y < 0) {
-            this._y = Render.instance.stageLimitY
-        }
         return this._y
+    }
+    get radian(): number {
+        return this.angle * Math.PI / 180;
     }
     private set speedX(value: number) {
         this._speedX = value
@@ -92,8 +105,5 @@ export class Ship {
     }
     private get speedY(): number {
         return this._speedY
-    }
-    get radian():number{
-        return this.angle * Math.PI / 180;
     }
 }

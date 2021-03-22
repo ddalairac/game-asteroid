@@ -9,17 +9,15 @@ export class Bullet {
     private _x: number = 0
     private _y: number = 0
     private _angle: number = 0
-    private _constSpeed: number = 15
+    private _constSpeed: number = 25
 
     get radian(): number {
         return this._angle * Math.PI / 180;
     }
     get x(): number {
-        this._x += this.speedX 
         return this._x
     }
     get y(): number {
-        this._y += this.speedY
         return this._y
     }
     // get angle(): number {
@@ -31,5 +29,8 @@ export class Bullet {
     private get speedY(): number {
         return  Math.sin(this.radian) * this._constSpeed
     }
-    
+    update(){
+        this._x += this.speedX 
+        this._y += this.speedY
+    }
 }

@@ -14,12 +14,21 @@ export class Asteroid {
     private _y: number
     private _speedX: number = 0
     private _speedY: number = 0
-    private _maxSpeed: number = 10
+    private _maxSpeed: number = 3
 
     private getRandomNum(min: number, max: number): number {
         return Math.random() * (max - min) + min;
     }
+
     get x(): number {
+        
+        return this._x
+    }
+    get y(): number {
+        return this._y
+    }
+    update(){
+        // X
         this._x += this._speedX
         if (this._x > Render.instance.stageLimitX + this.size) {
             this._x = 0 - this.size
@@ -27,9 +36,7 @@ export class Asteroid {
         if (this._x < 0 - this.size) {
             this._x = Render.instance.stageLimitX+ this.size
         }
-        return this._x
-    }
-    get y(): number {
+        // Y
         this._y += this._speedY
         if (this._y > Render.instance.stageLimitY+ this.size) {
             this._y = 0 - this.size
@@ -37,6 +44,5 @@ export class Asteroid {
         if (this._y < 0 - this.size) {
             this._y = Render.instance.stageLimitY+ this.size
         }
-        return this._y
     }
 }

@@ -3,6 +3,7 @@ import { Game } from './game.js';
 import { Render } from './render.js';
 export class Ship {
     constructor() {
+        this.size = 20;
         this.keyLeftPress = false;
         this.keyRightPress = false;
         this.keyUpPress = false;
@@ -10,27 +11,41 @@ export class Ship {
         this._speedX = 0;
         this._speedY = 0;
         this._angle = 0;
-        this._maxSpeed = 30;
+        this._maxSpeed = 15;
         this._x = Render.instance.stageLimitX / 2;
         this._y = Render.instance.stageLimitY / 2;
     }
     shut() {
         Game.instance.bullets.push(new Bullet(this.x, this.y, this._angle));
     }
-    move() {
+    update() {
         if (this.keyLeftPress) {
-            this.angle -= 6;
+            this.angle -= 15;
         }
         if (this.keyRightPress) {
-            this.angle += 6;
+            this.angle += 15;
         }
         if (this.keyUpPress) {
-            this.speedX += Math.cos(this.radian);
-            this.speedY += Math.sin(this.radian);
+            this.speedX += Math.cos(this.radian) / 2;
+            this.speedY += Math.sin(this.radian) / 2;
         }
         if (this.keyDownPress) {
-            this.speedX -= Math.cos(this.radian);
-            this.speedY -= Math.sin(this.radian);
+            this.speedX -= Math.cos(this.radian) / 2;
+            this.speedY -= Math.sin(this.radian) / 2;
+        }
+        this._x += this._speedX;
+        if (this._x > Render.instance.stageLimitX) {
+            this._x = 0;
+        }
+        if (this._x < 0) {
+            this._x = Render.instance.stageLimitX;
+        }
+        this._y += this._speedY;
+        if (this._y > Render.instance.stageLimitY) {
+            this._y = 0;
+        }
+        if (this._y < 0) {
+            this._y = Render.instance.stageLimitY;
         }
     }
     get angle() {
@@ -46,24 +61,13 @@ export class Ship {
         }
     }
     get x() {
-        this._x += this._speedX;
-        if (this._x > Render.instance.stageLimitX) {
-            this._x = 0;
-        }
-        if (this._x < 0) {
-            this._x = Render.instance.stageLimitX;
-        }
         return this._x;
     }
     get y() {
-        this._y += this._speedY;
-        if (this._y > Render.instance.stageLimitY) {
-            this._y = 0;
-        }
-        if (this._y < 0) {
-            this._y = Render.instance.stageLimitY;
-        }
         return this._y;
+    }
+    get radian() {
+        return this.angle * Math.PI / 180;
     }
     set speedX(value) {
         this._speedX = value;
@@ -88,9 +92,6 @@ export class Ship {
     }
     get speedY() {
         return this._speedY;
-    }
-    get radian() {
-        return this.angle * Math.PI / 180;
     }
 }
 //# sourceMappingURL=ship.js.map

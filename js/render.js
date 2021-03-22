@@ -7,6 +7,12 @@ export class Render {
         Render._instance = this;
         this.canvas = document.getElementById("stage");
         this.ctx = this.canvas.getContext("2d");
+        this.rezize();
+        window.onresize = function () {
+            Render.instance.rezize();
+        };
+    }
+    rezize() {
         this.ctx.canvas.width = window.innerWidth;
         this.ctx.canvas.height = window.innerHeight;
     }
@@ -30,38 +36,42 @@ export class Render {
         this.ctx.strokeStyle = strokeColor;
         this.ctx.lineWidth = strokeWidth;
         this.ctx.stroke();
-        this.ctx.fill();
     }
-    drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth, strokeColor, fillColor) {
+    drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth = 2, strokeColor = 'white', fillColor = 'transparent') {
+        this.ctx.save();
         this.ctx.translate(centerX, centerY);
         this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
-        this.ctx.translate(-centerX, -centerY);
+        this.ctx.restore();
     }
-    drawPolygon_MoveAndRotate(radian, centerX, centerY, sideCount, size, strokeWidth, strokeColor, fillColor) {
+    drawPolygon_MoveAndRotate(radian, centerX, centerY, sideCount, size, strokeWidth = 2, strokeColor = 'white', fillColor = 'transparent') {
+        this.ctx.save();
         this.ctx.translate(centerX, centerY);
         this.ctx.rotate(radian);
         this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
-        this.ctx.rotate(-radian);
-        this.ctx.translate(-centerX, -centerY);
+        this.ctx.restore();
+    }
+    hitArea(x, y, size) {
     }
     drawShip() {
-        let ship = Game.instance.ship;
-        let centerX = ship.x;
-        let centerY = ship.y;
-        let radian = ship.radian;
-        let size = 20;
-        let sideCount = 3;
-        let strokeWidth = 4;
-        let strokeColor = 'silver';
-        let fillColor = 'whitesmoke';
-        let fillColorWindow = 'cadetblue';
-        this.ctx.translate(centerX, centerY);
-        this.ctx.rotate(radian);
-        this.drawPolygon(5, 16, strokeWidth, strokeColor, fillColor);
-        this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
-        this.drawPolygon(2, 16, 2, strokeColor, fillColor);
-        this.ctx.rotate(-radian);
-        this.ctx.translate(-centerX, -centerY);
+        if (Game.instance.ship) {
+            let ship = Game.instance.ship;
+            this.hitArea(ship.x, ship.y, ship.size);
+            let centerX = ship.x;
+            let centerY = ship.y;
+            let radian = ship.radian;
+            let size = ship.size;
+            let sideCount = 3;
+            let strokeWidth = 2;
+            let strokeColor = 'silver';
+            let fillColor = 'whitesmoke';
+            let fillColorWindow = 'cadetblue';
+            this.ctx.save();
+            this.ctx.translate(centerX, centerY);
+            this.ctx.rotate(radian);
+            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, 'whitesmoke');
+            this.drawPolygon(2, 11, 2, strokeColor, fillColor);
+            this.ctx.restore();
+        }
     }
     drawBullet() {
         let size = 5;
@@ -75,14 +85,20 @@ export class Render {
     }
     drawAsteroid(centerX, centerY, size) {
         let sideCount = 8;
-        let strokeWidth = 4;
-        let strokeColor = 'darkred';
-        let fillColor = 'brown';
-        this.drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth, strokeColor, fillColor);
+        this.hitArea(centerX, centerY, size);
+        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size);
     }
     drawAsteroids() {
         Game.instance.asteroids.forEach(asteroid => {
             this.drawAsteroid(asteroid.x, asteroid.y, asteroid.size);
+        });
+    }
+    drawCollition(centerX, centerY, size) {
+        this.drawPolygon_MoveAndRotate(0, centerX, centerY, 5, size, 1, 'yellow', 'yellow');
+    }
+    drawCollitions() {
+        Game.instance.collisions.forEach(collision => {
+            this.drawCollition(collision.x, collision.y, collision.size);
         });
     }
     drawBoard() {
@@ -90,6 +106,7 @@ export class Render {
         this.drawBullet();
         this.drawShip();
         this.drawAsteroids();
+        this.drawCollitions();
     }
 }
 //# sourceMappingURL=render.js.map

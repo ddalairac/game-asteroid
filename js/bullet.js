@@ -3,7 +3,7 @@ export class Bullet {
         this._x = 0;
         this._y = 0;
         this._angle = 0;
-        this._constSpeed = 15;
+        this._constSpeed = 25;
         this._x = x;
         this._y = y;
         this._angle = angle;
@@ -12,11 +12,9 @@ export class Bullet {
         return this._angle * Math.PI / 180;
     }
     get x() {
-        this._x += this.speedX;
         return this._x;
     }
     get y() {
-        this._y += this.speedY;
         return this._y;
     }
     get speedX() {
@@ -24,6 +22,10 @@ export class Bullet {
     }
     get speedY() {
         return Math.sin(this.radian) * this._constSpeed;
+    }
+    update() {
+        this._x += this.speedX;
+        this._y += this.speedY;
     }
 }
 //# sourceMappingURL=bullet.js.map
