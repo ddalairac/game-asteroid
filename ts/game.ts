@@ -41,9 +41,9 @@ export class Game {
         requestAnimationFrame(this.frameLoop);
     }
     public newAsteroidsEval() {
-        console.log("asteroid total",this.asteroids.length)
+        // console.log("asteroid total",this.asteroids.length)
         if (this.bulletCount % 19 == 0) {
-            console.log("new asteroid - total",this.asteroids.length)
+            // console.log("new asteroid - total",this.asteroids.length)
             this.asteroids.push(new Asteroid())
         }
     }

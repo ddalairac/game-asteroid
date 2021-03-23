@@ -7,13 +7,14 @@ body {
     padding: 0;
     border: none;
     overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
 }
 // body{
 //     display: flex;
 //     justify-content: center;
-//     align-items: center;    
+//     align-items: center;
 // }
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -25,4 +26,75 @@ canvas {
     height: 100vh;
     max-width: 100vw;
     width: 100vw;
+}
+
+
+$color: white;
+$background: black;
+$position: -5px;
+
+.instructions {
+    // background: red;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    opacity: .6;
+    .description{
+        padding: 8px;
+    }
+    .key {
+        position: relative;
+        margin: 3px;
+        background: $background;
+        color: $color;
+        border: 1px solid $color;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 6px;
+
+        &.arrow {
+            width: 30px;
+            &:before {
+                position: relative;
+                content: "";
+                display: block;
+                border: 6px solid transparent;
+                background: transparent;
+                padding: 0;
+                margin: 0 auto;
+                width: 0;
+                height: 0;
+            }
+
+            &.up {
+                &:before {
+                    border-bottom-color: $color;
+                    top: $position;
+                }
+            }
+            &.bottom {
+                &:before {
+                    border-top-color: $color;
+                    bottom: $position;
+                }
+            }
+            &.left {
+                &:before {
+                    border-right-color: $color;
+                    left: $position;
+                }
+            }
+            &.right {
+                &:before {
+                    border-left-color: $color;
+                    right: $position;
+                }
+            }
+        }
+    }
 }
