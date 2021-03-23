@@ -13,8 +13,8 @@ export class Render {
         };
     }
     rezize() {
-        this.ctx.canvas.width = window.innerWidth;
-        this.ctx.canvas.height = window.innerHeight;
+        this.ctx.canvas.width = window.innerWidth - 15;
+        this.ctx.canvas.height = window.innerHeight - 15;
     }
     static get instance() {
         return this._instance;
@@ -96,17 +96,17 @@ export class Render {
     drawCollition(centerX, centerY, size) {
         this.drawPolygon_MoveAndRotate(0, centerX, centerY, 5, size, 1, 'yellow', 'yellow');
     }
-    drawCollitions() {
-        Game.instance.collisions.forEach(collision => {
-            this.drawCollition(collision.x, collision.y, collision.size);
+    drawExplotion() {
+        Game.instance.explotions.forEach(explotion => {
+            this.drawCollition(explotion.x, explotion.y, explotion.size);
         });
     }
     drawBoard() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawExplotion();
         this.drawBullet();
         this.drawShip();
         this.drawAsteroids();
-        this.drawCollitions();
     }
 }
 //# sourceMappingURL=render.js.map

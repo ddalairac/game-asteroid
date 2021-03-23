@@ -1,6 +1,7 @@
-import { Asteroid } from './asteroid.js';
+import { Asteroid, eAstType } from './asteroid.js';
 import { Bullet } from './bullet.js';
-import { Collision } from './collision.js';
+import { Explotion } from './explotion.js';
+import { Collition } from './collition.js';
 import { Render } from './render.js';
 import { Ship } from './ship.js';
 
@@ -17,13 +18,15 @@ export class Game {
         return this._instance;
     }
 
+    public gameOver: boolean = false
+    public collision: Collition = new Collition()
     public ship: Ship | null = new Ship()
     public asteroids: Asteroid[] = []
     public bullets: Bullet[] = []
-    public collisions: Collision[] = []
-    private nextTime: number = 0
+    public explotions: Explotion[] = []
+
     private delay: number = Math.round(1000 / 24)
-    private gameOver: boolean = false
+    private nextTime: number = 0
 
     public starGame() {
         this.gameOver = false
@@ -31,7 +34,8 @@ export class Game {
         this.ship = new Ship()
         this.asteroids = [new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid()]
         this.bullets = []
-        this.collisions = []
+        this.explotions = []
+        this.collision = new Collition()
         requestAnimationFrame(this.frameLoop);
     }
 
@@ -47,52 +51,6 @@ export class Game {
         this.asteroids.forEach(ast => ast.update());
     }
 
-    public collitionShip() {
-        if (this.ship) {
-            let sRadio = this.ship.size
-            let sPX = this.ship.x
-            let sPY = this.ship.y
-
-            this.asteroids.forEach(ast => {
-                let aRadio = ast.size
-                let aPX = ast.x
-                let aPY = ast.y
-
-                /** Formula for distance between vectors
-                 *   ________________________
-                 *  √ (x1 - x2)² + (y1 - y2)²     */
-                let distanceBetweenVectors = Math.sqrt(Math.pow((sPX - aPX), 2) + Math.pow((sPY - aPY), 2))
-                // console.log("distanceBetweenVectors", distanceBetweenVectors, "sr", sRadio, "ar", aRadio, "resta", distanceBetweenVectors - sRadio - aRadio)
-                if (distanceBetweenVectors - sRadio - aRadio < 0) {
-                    console.log("destroyShip")
-                    this.onGameOver()
-                    this.collisions.push(new Collision(sPX, sPY, sRadio))
-                }
-            });
-        }
-    }
-    public collitionBullets() {
-        this.asteroids = this.asteroids.filter(ast => {
-            let aRadio = ast.size
-            let aPX = ast.x
-            let aPY = ast.y
-            let asteroidExist = true
-            this.bullets = this.bullets.filter(b => {
-                let bPX = b.x
-                let bPY = b.y
-                // distance between vectors
-                let distanceBetweenVectors = Math.sqrt(Math.pow((bPX - aPX), 2) + Math.pow((bPY - aPY), 2))
-                if (distanceBetweenVectors - aRadio < 0) {
-                    console.log("destroyAsteroid")
-                    this.collisions.push(new Collision(aPX, aPY, aRadio))
-                    asteroidExist = false;  // detroy asteroid
-                    return false // detroy bullet
-                }
-                return true
-            });
-            return asteroidExist
-        });
-    }
     private frameLoop(time: number) {
         let that = Game.instance
         if (time < that.nextTime) { requestAnimationFrame(that.frameLoop); return; }
@@ -101,8 +59,7 @@ export class Game {
         Game.instance.asteroidsUpdate()
         Game.instance.bulletsUpdate()
 
-        Game.instance.collitionShip()
-        Game.instance.collitionBullets()
+        Game.instance.collision.eval()
         Render.instance.drawBoard()
         if (Game.instance.gameOver == false) {
             requestAnimationFrame(that.frameLoop);
@@ -110,9 +67,9 @@ export class Game {
     }
 
     public onGameOver() {
-        this.ship = null
         setTimeout(() => {
             console.log("Game Over")
+            console.log("puntos: ", (this.explotions.length-1) * 100)
             this.gameOver = true
 
             setTimeout(() => {

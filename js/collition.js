@@ -2,7 +2,9 @@ import { Asteroid, eAstType } from './asteroid.js';
 import { Explotion } from './explotion.js';
 import { Game } from './game.js';
 export class Collition {
-    constructor() { }
+    constructor() {
+        this.count = 0;
+    }
     eval() {
         this.collitionShip();
         this.collitionBullets();
@@ -28,18 +30,17 @@ export class Collition {
     collitionBullets() {
         let newAsteroids = [];
         let asteroids = Game.instance.asteroids;
-        let bullets = Game.instance.bullets;
         asteroids = asteroids.filter(ast => {
             let aRadio = ast.size;
             let aPX = ast.x;
             let aPY = ast.y;
             let asteroidExist = true;
-            bullets = bullets.filter(b => {
+            Game.instance.bullets = Game.instance.bullets.filter(b => {
                 let bPX = b.x;
                 let bPY = b.y;
                 let distanceBetweenVectors = Math.sqrt(Math.pow((bPX - aPX), 2) + Math.pow((bPY - aPY), 2));
                 if (distanceBetweenVectors - aRadio < 0) {
-                    this.destroyAsteroid(ast, newAsteroids);
+                    this.destroyAsteroid(ast, newAsteroids, b.radian);
                     asteroidExist = false;
                     return false;
                 }
@@ -56,15 +57,21 @@ export class Collition {
         }
         Game.instance.ship = null;
     }
-    destroyAsteroid(ast, newAsteroids) {
+    destroyAsteroid(ast, newAsteroids, radian) {
+        console.log("this.count", this.count);
+        if (this.count > 5) {
+            this.count = 0;
+            newAsteroids.push(new Asteroid());
+        }
+        this.count++;
         Game.instance.explotions.push(new Explotion(ast.x, ast.y, ast.size));
         if (ast.size == eAstType.big) {
-            newAsteroids.push(new Asteroid(ast.x, ast.y, eAstType.medium), new Asteroid(ast.x, ast.y, eAstType.medium));
+            newAsteroids.push(new Asteroid(ast.x, ast.y, radian - 0.5, eAstType.medium), new Asteroid(ast.x, ast.y, radian + 0.5, eAstType.medium));
         }
         if (ast.size == eAstType.medium) {
-            newAsteroids.push(new Asteroid(ast.x, ast.y, eAstType.small), new Asteroid(ast.x, ast.y, eAstType.small), new Asteroid(ast.x, ast.y, eAstType.small));
+            newAsteroids.push(new Asteroid(ast.x, ast.y, radian - 0.5, eAstType.small), new Asteroid(ast.x, ast.y, radian, eAstType.small), new Asteroid(ast.x, ast.y, radian + 0.5, eAstType.small));
         }
         return newAsteroids;
     }
 }
-//# sourceMappingURL=collision.js.map
+//# sourceMappingURL=collition.js.map

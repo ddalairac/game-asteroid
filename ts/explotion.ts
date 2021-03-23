@@ -3,7 +3,7 @@ import { Bullet } from './bullet.js';
 import { Game } from './game.js';
 import { Ship } from './ship.js';
 
-export class Collision {
+export class Explotion {
     constructor(x: number, y: number, size: number) {
         this._x = x
         this._y = y

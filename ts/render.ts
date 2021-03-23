@@ -18,8 +18,8 @@ export class Render {
         }
     }
     rezize() {
-        this.ctx.canvas.width = window.innerWidth;
-        this.ctx.canvas.height = window.innerHeight;
+        this.ctx.canvas.width = window.innerWidth - 15;
+        this.ctx.canvas.height = window.innerHeight- 15;
     }
 
     private ctx: CanvasRenderingContext2D
@@ -130,9 +130,9 @@ export class Render {
     private drawCollition(centerX: number, centerY: number, size: number) {
         this.drawPolygon_MoveAndRotate(0, centerX, centerY, 5, size, 1, 'yellow', 'yellow')
     }
-    private drawCollitions() {
-        Game.instance.collisions.forEach(collision => {
-            this.drawCollition(collision.x, collision.y, collision.size)
+    private drawExplotion() {
+        Game.instance.explotions.forEach(explotion => {
+            this.drawCollition(explotion.x, explotion.y, explotion.size)
         });
     }
 
@@ -141,9 +141,9 @@ export class Render {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Dibujar canvas
+        this.drawExplotion()
         this.drawBullet()
         this.drawShip()
         this.drawAsteroids()
-        this.drawCollitions()
     }
 }
