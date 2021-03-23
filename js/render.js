@@ -38,13 +38,7 @@ export class Render {
         this.ctx.stroke();
         this.ctx.fill();
     }
-    drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth = 2, strokeColor = 'white', fillColor = 'transparent') {
-        this.ctx.save();
-        this.ctx.translate(centerX, centerY);
-        this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
-        this.ctx.restore();
-    }
-    drawPolygon_MoveAndRotate(radian, centerX, centerY, sideCount, size, strokeWidth = 2, strokeColor = 'white', fillColor = 'transparent') {
+    drawPolygonAndMove(radian, centerX, centerY, sideCount, size, strokeWidth = 2, strokeColor = 'white', fillColor = 'transparent') {
         this.ctx.save();
         this.ctx.translate(centerX, centerY);
         this.ctx.rotate(radian);
@@ -67,13 +61,14 @@ export class Render {
             let fillColor = 'black';
             let fillColorWindow = 'cadetblue';
             ship.particles.forEach(part => {
-                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, strokeColor);
+                this.drawPolygonAndMove(0, part.x, part.y, part.sideCount, part.size, 1, strokeColor);
             });
             this.ctx.save();
             this.ctx.translate(centerX, centerY);
             this.ctx.rotate(radian);
-            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
-            this.drawPolygon(2, 11, 2, strokeColor, fillColor);
+            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, 'black');
+            this.drawPolygon(5, 12, strokeWidth, strokeColor, 'black');
+            this.drawPolygon(2, 12, 2, strokeColor, fillColor);
             this.ctx.restore();
         }
     }
@@ -84,13 +79,13 @@ export class Render {
         let strokeColor = 'red';
         let fillColor = 'red';
         Game.instance.bullets.forEach(bullet => {
-            this.drawPolygon_MoveAndRotate(bullet.radian, bullet.x, bullet.y, sideCount, size, strokeWidth, strokeColor, fillColor);
+            this.drawPolygonAndMove(bullet.radian, bullet.x, bullet.y, sideCount, size, strokeWidth, strokeColor, fillColor);
         });
     }
     drawAsteroid(centerX, centerY, size) {
         let sideCount = 8;
         this.hitArea(centerX, centerY, size);
-        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size);
+        this.drawPolygonAndMove(0, centerX, centerY, sideCount, size);
     }
     drawAsteroids() {
         Game.instance.asteroids.forEach(asteroid => {
@@ -98,13 +93,13 @@ export class Render {
         });
     }
     drawCollition(centerX, centerY, sideCount, size) {
-        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size, 1, '#222');
+        this.drawPolygonAndMove(0, centerX, centerY, sideCount, size, 1, '#222');
     }
     drawExplotion() {
         Game.instance.explotions.forEach(explotion => {
             this.drawCollition(explotion.x, explotion.y, explotion.sideCount, explotion.size);
             explotion.particles.forEach(part => {
-                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, 'yellow');
+                this.drawPolygonAndMove(0, part.x, part.y, part.sideCount, part.size, 1, 'yellow');
             });
         });
     }

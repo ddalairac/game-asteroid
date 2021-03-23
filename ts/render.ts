@@ -51,13 +51,7 @@ export class Render {
         this.ctx.stroke();
         this.ctx.fill();
     }
-    private drawPolygon_Move(centerX: number, centerY: number, sideCount: number, size: number, strokeWidth: number = 2, strokeColor: string = 'white', fillColor: string = 'transparent') {
-        this.ctx.save();
-        this.ctx.translate(centerX, centerY);
-        this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor)
-        this.ctx.restore()
-    }
-    private drawPolygon_MoveAndRotate(radian: number, centerX: number, centerY: number, sideCount: number, size: number, strokeWidth: number = 2, strokeColor: string = 'white', fillColor: string = 'transparent') {
+    private drawPolygonAndMove(radian: number, centerX: number, centerY: number, sideCount: number, size: number, strokeWidth: number = 2, strokeColor: string = 'white', fillColor: string = 'transparent') {
         this.ctx.save();
         this.ctx.translate(centerX, centerY);
         this.ctx.rotate(radian);
@@ -69,7 +63,6 @@ export class Render {
 
     hitArea(x: number, y: number, size: number) {
         // this.ctx.beginPath();
-        // // this.ctx.rect(x, y, size, size);
         // this.ctx.arc(x, y, size, 0, 2 * Math.PI);
         // this.ctx.fillStyle = "red";
         // this.ctx.fill()
@@ -93,16 +86,15 @@ export class Render {
             let fillColorWindow: string = 'cadetblue'
 
             ship.particles.forEach(part => {
-                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, strokeColor)
+                this.drawPolygonAndMove(0, part.x, part.y, part.sideCount, part.size, 1, strokeColor)
             })
             this.ctx.save();
             this.ctx.translate(centerX, centerY);
             this.ctx.rotate(radian);
 
-            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor) // triangulo
-            // this.drawPolygon( 5, 8, strokeWidth, strokeColor, 'black') // pentagrama
-            // this.drawPolygon(2, 8, 2, strokeColor, fillColor) // center line
-            this.drawPolygon(2, 11, 2, strokeColor, fillColor) // center line
+            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, 'black') // triangulo
+            this.drawPolygon( 5, 12, strokeWidth, strokeColor, 'black') // pentagrama
+            this.drawPolygon(2, 12, 2, strokeColor, fillColor) // center line
             this.ctx.restore()
 
         }
@@ -114,7 +106,7 @@ export class Render {
         let strokeColor: string = 'red'
         let fillColor: string = 'red'
         Game.instance.bullets.forEach(bullet => {
-            this.drawPolygon_MoveAndRotate(bullet.radian, bullet.x, bullet.y, sideCount, size, strokeWidth, strokeColor, fillColor)
+            this.drawPolygonAndMove(bullet.radian, bullet.x, bullet.y, sideCount, size, strokeWidth, strokeColor, fillColor)
         });
     }
     private drawAsteroid(centerX: number, centerY: number, size: number) {
@@ -124,7 +116,7 @@ export class Render {
         // let fillColor: string = 'brown'
 
         this.hitArea(centerX, centerY, size);
-        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size, /*strokeWidth , strokeColor, fillColor */)
+        this.drawPolygonAndMove(0, centerX, centerY, sideCount, size, /*strokeWidth , strokeColor, fillColor */)
     }
     private drawAsteroids() {
         Game.instance.asteroids.forEach(asteroid => {
@@ -132,13 +124,13 @@ export class Render {
         });
     }
     private drawCollition(centerX: number, centerY: number, sideCount: number, size: number) {
-        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size, 1, '#222')
+        this.drawPolygonAndMove(0, centerX, centerY, sideCount, size, 1, '#222')
     }
     private drawExplotion() {
         Game.instance.explotions.forEach(explotion => {
             this.drawCollition(explotion.x, explotion.y, explotion.sideCount, explotion.size)
             explotion.particles.forEach(part => {
-                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, 'yellow')
+                this.drawPolygonAndMove(0, part.x, part.y, part.sideCount, part.size, 1, 'yellow')
             });
         });
     }
