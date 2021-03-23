@@ -41,6 +41,9 @@ export class Game {
     asteroidsUpdate() {
         this.asteroids.forEach(ast => ast.update());
     }
+    explotionsUpdate() {
+        this.explotions.forEach(exp => exp.update());
+    }
     frameLoop(time) {
         let that = Game.instance;
         if (time < that.nextTime) {
@@ -53,6 +56,7 @@ export class Game {
         Game.instance.asteroidsUpdate();
         Game.instance.bulletsUpdate();
         Game.instance.collision.eval();
+        Game.instance.explotionsUpdate();
         Render.instance.drawBoard();
         if (Game.instance.gameOver == false) {
             requestAnimationFrame(that.frameLoop);
@@ -63,10 +67,8 @@ export class Game {
             console.log("Game Over");
             console.log("puntos: ", (this.explotions.length - 1) * 100);
             this.gameOver = true;
-            setTimeout(() => {
-                this.starGame();
-            }, 500);
-        }, 1);
+            this.starGame();
+        }, 2000);
     }
 }
 //# sourceMappingURL=game.js.map

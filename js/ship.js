@@ -1,5 +1,6 @@
 import { Bullet } from './bullet.js';
 import { Game } from './game.js';
+import { Particle } from './particle.js';
 import { Render } from './render.js';
 export class Ship {
     constructor() {
@@ -12,6 +13,7 @@ export class Ship {
         this._speedY = 0;
         this._angle = 0;
         this._maxSpeed = 15;
+        this.particles = [];
         this._x = Render.instance.stageLimitX / 2;
         this._y = Render.instance.stageLimitY / 2;
     }
@@ -19,20 +21,6 @@ export class Ship {
         Game.instance.bullets.push(new Bullet(this.x, this.y, this._angle));
     }
     update() {
-        if (this.keyLeftPress) {
-            this.angle -= 15;
-        }
-        if (this.keyRightPress) {
-            this.angle += 15;
-        }
-        if (this.keyUpPress) {
-            this.speedX += Math.cos(this.radian) / 2;
-            this.speedY += Math.sin(this.radian) / 2;
-        }
-        if (this.keyDownPress) {
-            this.speedX -= Math.cos(this.radian) / 2;
-            this.speedY -= Math.sin(this.radian) / 2;
-        }
         this._x += this._speedX;
         if (this._x > Render.instance.stageLimitX) {
             this._x = 0;
@@ -47,6 +35,25 @@ export class Ship {
         if (this._y < 0) {
             this._y = Render.instance.stageLimitY;
         }
+        if (this.keyLeftPress) {
+            this.angle -= 15;
+        }
+        if (this.keyRightPress) {
+            this.angle += 15;
+        }
+        if (this.keyUpPress) {
+            this.speedX += Math.cos(this.radian) / 2;
+            this.speedY += Math.sin(this.radian) / 2;
+            this.particles.push(new Particle(this.x, this.y, this.size, 5, this.radian), new Particle(this.x, this.y, this.size, 5, this.radian));
+        }
+        if (this.keyDownPress) {
+            this.speedX -= Math.cos(this.radian) / 2;
+            this.speedY -= Math.sin(this.radian) / 2;
+        }
+        this.particles = this.particles.filter((part) => {
+            part.update();
+            return part.size > 0;
+        });
     }
     get angle() {
         return this._angle;

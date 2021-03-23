@@ -1,5 +1,6 @@
 import { Bullet } from './bullet.js'
 import { Game } from './game.js'
+import { Particle } from './particle.js'
 import { Render } from './render.js'
 
 export class Ship {
@@ -18,25 +19,12 @@ export class Ship {
     private _speedY: number = 0
     private _angle: number = 0
     private _maxSpeed: number = 15
+    public particles: Particle[] = []
 
     shut() {
         Game.instance.bullets.push(new Bullet(this.x, this.y, this._angle))
     }
     update() {
-        if (this.keyLeftPress) {
-            this.angle -= 15
-        }
-        if (this.keyRightPress) {
-            this.angle += 15
-        }
-        if (this.keyUpPress) {
-            this.speedX += Math.cos(this.radian) / 2
-            this.speedY += Math.sin(this.radian) / 2
-        }
-        if (this.keyDownPress) {
-            this.speedX -= Math.cos(this.radian) / 2
-            this.speedY -= Math.sin(this.radian) / 2
-        }
         // X
         this._x += this._speedX
         if (this._x > Render.instance.stageLimitX) {
@@ -53,14 +41,30 @@ export class Ship {
         if (this._y < 0) {
             this._y = Render.instance.stageLimitY
         }
+        if (this.keyLeftPress) {
+            this.angle -= 15
+        }
+        if (this.keyRightPress) {
+            this.angle += 15
+        }
+        if (this.keyUpPress) {
+            this.speedX += Math.cos(this.radian) / 2
+            this.speedY += Math.sin(this.radian) / 2
+
+            this.particles.push(
+                new Particle(this.x, this.y, this.size, 5, this.radian),
+                new Particle(this.x, this.y, this.size, 5, this.radian))
+        }
+        if (this.keyDownPress) {
+            this.speedX -= Math.cos(this.radian) / 2
+            this.speedY -= Math.sin(this.radian) / 2
+        }
+        this.particles = this.particles.filter((part) => {
+            part.update()
+            return part.size > 0
+        })
     }
-    // collide(objX:number,objY:number):boolean{
-    //     let shipLeft = Math.round(this.x - this.size / 2)
-    //     let shipRight = Math.round(this.x + this.size / 2)
-    //     let shipTop = Math.round(this.y - this.size / 2)
-    //     let shipBottom = Math.round(this.y + this.size / 2)
-    //     return ((shipLeft < objX && objY > shipLeft ) || (shipRight < objY && objX > shipRight )) 
-    // }
+
     get angle(): number {
         return this._angle
     }

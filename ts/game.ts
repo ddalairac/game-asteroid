@@ -50,6 +50,9 @@ export class Game {
     public asteroidsUpdate() {
         this.asteroids.forEach(ast => ast.update());
     }
+    public explotionsUpdate() {
+        this.explotions.forEach(exp => exp.update());
+    }
 
     private frameLoop(time: number) {
         let that = Game.instance
@@ -58,8 +61,8 @@ export class Game {
         if (Game.instance.ship) Game.instance.ship.update()
         Game.instance.asteroidsUpdate()
         Game.instance.bulletsUpdate()
-
         Game.instance.collision.eval()
+        Game.instance.explotionsUpdate()        
         Render.instance.drawBoard()
         if (Game.instance.gameOver == false) {
             requestAnimationFrame(that.frameLoop);
@@ -72,9 +75,9 @@ export class Game {
             console.log("puntos: ", (this.explotions.length-1) * 100)
             this.gameOver = true
 
-            setTimeout(() => {
+            // setTimeout(() => {
                 this.starGame()
-            }, 500);
-        }, 1);
+            // }, 1500);
+        }, 2000);
     }
 }

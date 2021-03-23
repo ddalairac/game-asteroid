@@ -36,6 +36,7 @@ export class Render {
         this.ctx.strokeStyle = strokeColor;
         this.ctx.lineWidth = strokeWidth;
         this.ctx.stroke();
+        this.ctx.fill();
     }
     drawPolygon_Move(centerX, centerY, sideCount, size, strokeWidth = 2, strokeColor = 'white', fillColor = 'transparent') {
         this.ctx.save();
@@ -61,14 +62,17 @@ export class Render {
             let radian = ship.radian;
             let size = ship.size;
             let sideCount = 3;
-            let strokeWidth = 2;
+            let strokeWidth = 4;
             let strokeColor = 'silver';
-            let fillColor = 'whitesmoke';
+            let fillColor = 'black';
             let fillColorWindow = 'cadetblue';
+            ship.particles.forEach(part => {
+                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, strokeColor);
+            });
             this.ctx.save();
             this.ctx.translate(centerX, centerY);
             this.ctx.rotate(radian);
-            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, 'whitesmoke');
+            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor);
             this.drawPolygon(2, 11, 2, strokeColor, fillColor);
             this.ctx.restore();
         }
@@ -93,20 +97,23 @@ export class Render {
             this.drawAsteroid(asteroid.x, asteroid.y, asteroid.size);
         });
     }
-    drawCollition(centerX, centerY, size) {
-        this.drawPolygon_MoveAndRotate(0, centerX, centerY, 5, size, 1, 'yellow', 'yellow');
+    drawCollition(centerX, centerY, sideCount, size) {
+        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size, 1, '#222');
     }
     drawExplotion() {
         Game.instance.explotions.forEach(explotion => {
-            this.drawCollition(explotion.x, explotion.y, explotion.size);
+            this.drawCollition(explotion.x, explotion.y, explotion.sideCount, explotion.size);
+            explotion.particles.forEach(part => {
+                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, 'yellow');
+            });
         });
     }
     drawBoard() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawExplotion();
         this.drawBullet();
-        this.drawShip();
         this.drawAsteroids();
+        this.drawShip();
     }
 }
 //# sourceMappingURL=render.js.map

@@ -19,7 +19,7 @@ export class Render {
     }
     rezize() {
         this.ctx.canvas.width = window.innerWidth - 15;
-        this.ctx.canvas.height = window.innerHeight- 15;
+        this.ctx.canvas.height = window.innerHeight - 15;
     }
 
     private ctx: CanvasRenderingContext2D
@@ -49,7 +49,7 @@ export class Render {
         this.ctx.strokeStyle = strokeColor;
         this.ctx.lineWidth = strokeWidth;
         this.ctx.stroke();
-        // this.ctx.fill();
+        this.ctx.fill();
     }
     private drawPolygon_Move(centerX: number, centerY: number, sideCount: number, size: number, strokeWidth: number = 2, strokeColor: string = 'white', fillColor: string = 'transparent') {
         this.ctx.save();
@@ -87,20 +87,24 @@ export class Render {
             let radian: number = ship.radian
             let size: number = ship.size
             let sideCount: number = 3
-            let strokeWidth: number = 2
+            let strokeWidth: number = 4
             let strokeColor: string = 'silver'
-            let fillColor: string = 'whitesmoke'
+            let fillColor: string = 'black'
             let fillColorWindow: string = 'cadetblue'
 
+            ship.particles.forEach(part => {
+                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, strokeColor)
+            })
             this.ctx.save();
             this.ctx.translate(centerX, centerY);
             this.ctx.rotate(radian);
 
-            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, 'whitesmoke') // triangulo
+            this.drawPolygon(sideCount, size, strokeWidth, strokeColor, fillColor) // triangulo
             // this.drawPolygon( 5, 8, strokeWidth, strokeColor, 'black') // pentagrama
             // this.drawPolygon(2, 8, 2, strokeColor, fillColor) // center line
             this.drawPolygon(2, 11, 2, strokeColor, fillColor) // center line
             this.ctx.restore()
+
         }
     }
     private drawBullet() {
@@ -127,12 +131,15 @@ export class Render {
             this.drawAsteroid(asteroid.x, asteroid.y, asteroid.size)
         });
     }
-    private drawCollition(centerX: number, centerY: number, size: number) {
-        this.drawPolygon_MoveAndRotate(0, centerX, centerY, 5, size, 1, 'yellow', 'yellow')
+    private drawCollition(centerX: number, centerY: number, sideCount: number, size: number) {
+        this.drawPolygon_MoveAndRotate(0, centerX, centerY, sideCount, size, 1, '#222')
     }
     private drawExplotion() {
         Game.instance.explotions.forEach(explotion => {
-            this.drawCollition(explotion.x, explotion.y, explotion.size)
+            this.drawCollition(explotion.x, explotion.y, explotion.sideCount, explotion.size)
+            explotion.particles.forEach(part => {
+                this.drawPolygon_MoveAndRotate(0, part.x, part.y, part.sideCount, part.size, 1, 'yellow')
+            });
         });
     }
 
@@ -143,7 +150,7 @@ export class Render {
         // Dibujar canvas
         this.drawExplotion()
         this.drawBullet()
-        this.drawShip()
         this.drawAsteroids()
+        this.drawShip()
     }
 }
