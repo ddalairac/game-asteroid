@@ -6,20 +6,8 @@ export class Asteroid {
         this._x = (x) ? x : this.getRandomNum(0, Render.instance.stageLimitX) * -1
         this._y = (y) ? y : this.getRandomNum(0, Render.instance.stageLimitY) * -1
         this.size = size
-
         this._speedX = this.getRandomNum(-this._maxSpeed, this._maxSpeed)
         this._speedY = this.getRandomNum(-this._maxSpeed, this._maxSpeed)
-
-        // if (radian) console.log("radian", radian)
-        // this._speedX = (radian)
-        //     ? Math.cos(radian) 
-        //     : this.getRandomNum(-3, 3)
-        // this._speedY = (radian)
-        //     ? Math.sin(radian) 
-        //     : this.getRandomNum(-3, 3)
-
-        // this._speedY = 0
-        // this._speedY = 0
     }
     public size: eAstType
     private _x: number
@@ -31,9 +19,7 @@ export class Asteroid {
     private getRandomNum(min: number, max: number): number {
         return Math.random() * (max - min) + min;
     }
-
     get x(): number {
-
         return this._x
     }
     get y(): number {

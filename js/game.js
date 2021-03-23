@@ -4,6 +4,7 @@ import { Render } from './render.js';
 import { Ship } from './ship.js';
 export class Game {
     constructor() {
+        this.bulletCount = 0;
         this.gameOver = false;
         this.collision = new Collition();
         this.ship = new Ship();
@@ -22,14 +23,22 @@ export class Game {
         return this._instance;
     }
     starGame() {
-        this.gameOver = false;
         console.log("Game Start");
+        this.gameOver = false;
+        this.bulletCount = 0;
         this.ship = new Ship();
         this.asteroids = [new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid()];
         this.bullets = [];
         this.explotions = [];
         this.collision = new Collition();
         requestAnimationFrame(this.frameLoop);
+    }
+    newAsteroidsEval() {
+        console.log("asteroid total", this.asteroids.length);
+        if (this.bulletCount % 19 == 0) {
+            console.log("new asteroid - total", this.asteroids.length);
+            this.asteroids.push(new Asteroid());
+        }
     }
     bulletsClean() {
         this.bullets = this.bullets.filter(b => (b.x > 0 && b.x < Render.instance.stageLimitX && b.y > 0 && b.y < Render.instance.stageLimitY));

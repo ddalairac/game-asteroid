@@ -19,6 +19,8 @@ export class Ship {
     }
     shut() {
         Game.instance.bullets.push(new Bullet(this.x, this.y, this._angle));
+        Game.instance.bulletCount++;
+        Game.instance.newAsteroidsEval();
     }
     update() {
         this._x += this._speedX;
@@ -44,11 +46,13 @@ export class Ship {
         if (this.keyUpPress) {
             this.speedX += Math.cos(this.radian) / 2;
             this.speedY += Math.sin(this.radian) / 2;
-            this.particles.push(new Particle(this.x, this.y, this.size, 5, this.radian), new Particle(this.x, this.y, this.size, 5, this.radian));
+            this.particles.push(new Particle(this.x, this.y, this.size, 5, this.radian), new Particle(this.x, this.y, this.size, 5, this.radian), new Particle(this.x, this.y, this.size, 5, this.radian));
         }
         if (this.keyDownPress) {
             this.speedX -= Math.cos(this.radian) / 2;
             this.speedY -= Math.sin(this.radian) / 2;
+            let revertRadian = ((this.angle - 180) * Math.PI / 180);
+            this.particles.push(new Particle(this.x, this.y, this.size, 5, revertRadian), new Particle(this.x, this.y, this.size, 5, revertRadian), new Particle(this.x, this.y, this.size, 5, revertRadian));
         }
         this.particles = this.particles.filter((part) => {
             part.update();

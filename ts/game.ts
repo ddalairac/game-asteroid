@@ -18,6 +18,7 @@ export class Game {
         return this._instance;
     }
 
+    public bulletCount: number = 0
     public gameOver: boolean = false
     public collision: Collition = new Collition()
     public ship: Ship | null = new Ship()
@@ -29,8 +30,9 @@ export class Game {
     private nextTime: number = 0
 
     public starGame() {
-        this.gameOver = false
         console.log("Game Start")
+        this.gameOver = false
+        this.bulletCount = 0
         this.ship = new Ship()
         this.asteroids = [new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid(), new Asteroid()]
         this.bullets = []
@@ -38,19 +40,25 @@ export class Game {
         this.collision = new Collition()
         requestAnimationFrame(this.frameLoop);
     }
+    public newAsteroidsEval() {
+        console.log("asteroid total",this.asteroids.length)
+        if (this.bulletCount % 19 == 0) {
+            console.log("new asteroid - total",this.asteroids.length)
+            this.asteroids.push(new Asteroid())
+        }
+    }
 
-
-    public bulletsClean() {
+    private bulletsClean() {
         this.bullets = this.bullets.filter(b => (b.x > 0 && b.x < Render.instance.stageLimitX && b.y > 0 && b.y < Render.instance.stageLimitY));
     }
-    public bulletsUpdate() {
+    private bulletsUpdate() {
         this.bulletsClean()
         this.bullets.forEach(bul => bul.update());
     }
-    public asteroidsUpdate() {
+    private asteroidsUpdate() {
         this.asteroids.forEach(ast => ast.update());
     }
-    public explotionsUpdate() {
+    private explotionsUpdate() {
         this.explotions.forEach(exp => exp.update());
     }
 
@@ -62,7 +70,8 @@ export class Game {
         Game.instance.asteroidsUpdate()
         Game.instance.bulletsUpdate()
         Game.instance.collision.eval()
-        Game.instance.explotionsUpdate()        
+        Game.instance.explotionsUpdate()    
+
         Render.instance.drawBoard()
         if (Game.instance.gameOver == false) {
             requestAnimationFrame(that.frameLoop);

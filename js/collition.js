@@ -2,9 +2,7 @@ import { Asteroid, eAstType } from './asteroid.js';
 import { Explotion } from './explotion.js';
 import { Game } from './game.js';
 export class Collition {
-    constructor() {
-        this.count = 0;
-    }
+    constructor() { }
     eval() {
         this.collitionShip();
         this.collitionBullets();
@@ -58,11 +56,6 @@ export class Collition {
         Game.instance.ship = null;
     }
     destroyAsteroid(ast, newAsteroids, radian) {
-        if (this.count > 6) {
-            this.count = 0;
-            newAsteroids.push(new Asteroid());
-        }
-        this.count++;
         Game.instance.explotions.push(new Explotion(ast.x, ast.y, ast.size, 6));
         if (ast.size == eAstType.big) {
             newAsteroids.push(new Asteroid(ast.x, ast.y, radian - 0.5, eAstType.medium), new Asteroid(ast.x, ast.y, radian + 0.5, eAstType.medium));

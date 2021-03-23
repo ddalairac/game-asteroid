@@ -11,7 +11,7 @@ export class Collition {
         this.collitionShip()
         this.collitionBullets()
     }
-    private count: number = 0
+    // //private count: number = 0
     private collitionShip() {
         let ship: Ship | null = Game.instance.ship
         if (ship) {
@@ -69,12 +69,12 @@ export class Collition {
     }
     private destroyAsteroid(ast: Asteroid, newAsteroids: Asteroid[], radian: number): Asteroid[] {
         // console.log("destroyAsteroid")
-        // console.log("this.count", this.count)
-        if (this.count > 6) {
-            this.count = 0
-            newAsteroids.push(new Asteroid())
-        }
-        this.count++
+        // // // console.log("this.count", this.count)
+        // // if (this.count > 6) {
+        // //     this.count = 0
+        // //     newAsteroids.push(new Asteroid())
+        // // }
+        // // this.count++
         Game.instance.explotions.push(new Explotion(ast.x, ast.y, ast.size, 6))
         if (ast.size == eAstType.big) {
             newAsteroids.push(
