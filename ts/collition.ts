@@ -59,7 +59,7 @@ export class Collition {
         });
         Game.instance.asteroids = [...asteroids, ...newAsteroids]
     }
-    private destroyShip() {
+    public destroyShip() {
         // console.log("destroyShip")
         let ship: Ship | null = Game.instance.ship
         if (ship) {

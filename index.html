@@ -11,13 +11,40 @@
 
 <body>
     <canvas id="stage" width="300" height="300"></canvas>
+    <div class="modal-cont hidden" id="modal">
+        <div class="modal-window">
+            <table>
+                <tr>
+                    <td>Score:</td>
+                    <td><span id="score"></span></td>
+                <tr>
+                    <td>Bullets fired:</td>
+                    <td><span id="bullets"></span></td>
+                </tr>
+                <tr>
+                    <td>Asteroids destroyed:</td>
+                    <td><span id="asteroids"></span></td>
+                </tr>
+                <tr>
+                    <td>Asteroids left:</td>
+                    <td><span id="asteroids2"></span></td>
+                </tr>
+                <tr>
+                    <td>Game time:</td>
+                    <td><span id="time"></span></td>
+                </tr>
+            </table>
+            <button id="newBTN">New Game</button>
+        </div>
+    </div>
     <div class="instructions">
-        <span class="key arrow up"></span>
-        <span class="key arrow bottom"></span>
-        <span class="key arrow left"></span>
-        <span class="key arrow right"></span>
-        <span class="key">space</span>
-        <span class="description">Cada 19 disparos se crea un nuevo asteroide</span>
+        <span title="thrust" class="key arrow up" ></span>
+        <span title="thrust" class="key arrow bottom" ></span>
+        <span title="turn" class="key arrow left" ></span>
+        <span title="turn" class="key arrow right" ></span>
+        <span title="Shooting" class="key" >Space</span>
+        <span title="Self destroy / new Game" class="key">Enter</span>
+        <span class="description">Every 30 shots a new asteroid is created<br>Every 5 secons a new asteroid is created</span>
     </div>
     <script src="js/main.js" type="module"></script>
 </body>
